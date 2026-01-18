@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Diet Sehat Anda</title>
+    <script type="module" src="https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            max-width: 500px;
+            width: 90%;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8; /* bg-blue-700 */
+        }
+        .btn-secondary {
+            background-color: #e5e7eb; /* bg-gray-200 */
+            color: #374151; /* text-gray-700 */
+        }
+        .btn-secondary:hover {
+            background-color: #d1d5db; /* bg-gray-300 */
+        }
+        .btn-success {
+            background-color: #16a34a; /* bg-green-600 */
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: #15803d; /* bg-green-700 */
+        }
+        .btn-danger {
+            background-color: #dc2626; /* bg-red-600 */
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #b91c1c; /* bg-red-700 */
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            margin-bottom: 1rem;
+        }
+        .card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            margin-bottom: 1.5rem;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <landing-page-app></landing-page-app>
+
+    <script type="module">
+        import { LitElement, html, css } from 'https://cdn.jsdelivr.net/gh/lit/dist@2/core/lit-core.min.js';
+
+        // Komponen Utama Aplikasi
+        class LandingPageApp extends LitElement {
+            static properties = {
+                currentPage: { type: String },
+                formData: { type: Object },
+                orderBumpAccepted: { type: Boolean },
+                upsellAccepted: { type: Boolean },
+                downsellAccepted: { type: Boolean },
+                paymentProofName: { type: String },
+            };
+
+            constructor() {
+                super();
+                this.currentPage = 'form'; // Halaman awal
+                this.formData = {};
+                this.orderBumpAccepted = false;
+                this.upsellAccepted = false;
+                this.downsellAccepted = false;
+                this.paymentProofName = '';
+            }
+
+            // Fungsi untuk berpindah halaman
+            navigateTo(page) {
+                this.currentPage = page;
+                window.scrollTo(0, 0); // Scroll ke atas setiap pindah halaman
+            }
+
+            // Handler untuk submit form
+            handleFormSubmit(event) {
+                this.formData = event.detail.formData;
+                console.log('Form Data:', this.formData);
+                this.navigateTo('orderBump');
+            }
+
+            // Handler untuk order bump
+            handleOrderBump(event) {
+                this.orderBumpAccepted = event.detail.accepted;
+                console.log('Order Bump Accepted:', this.orderBumpAccepted);
+                this.navigateTo('payment');
+            }
+
+            // Handler untuk upload bukti pembayaran
+            handlePaymentUpload(event) {
+                this.paymentProofName = event.detail.fileName;
+                console.log('Payment Proof Uploaded:', this.paymentProofName);
+                this.navigateTo('upsell');
+            }
+
+            // Handler untuk upsell
+            handleUpsell(event) {
+                this.upsellAccepted = event.detail.accepted;
+                console.log('Upsell Accepted:', this.upsellAccepted);
+                this.navigateTo('downsell'); // Selalu ke downsell setelah upsell
+            }
+
+            // Handler untuk downsell
+            handleDownsell(event) {
+                this.downsellAccepted = event.detail.accepted;
+                console.log('Downsell Accepted:', this.downsellAccepted);
+                this.navigateTo('thankyou');
+            }
+
+            render() {
+                return html`
+                    <div class="container mx-auto max-w-2xl">
+                        ${this.currentPage === 'form' ? html`
+                            <form-section @form-submitted="${this.handleFormSubmit}"></form-section>
+                        ` : ''}
+
+                        ${this.currentPage === 'orderBump' ? html`
+                            <order-bump-modal 
+                                .visible="${this.currentPage === 'orderBump'}"
+                                @order-bump-responded="${this.handleOrderBump}">
+                            </order-bump-modal>
+                        ` : ''}
+                        
+                        ${this.currentPage === 'payment' ? html`
+                            <payment-instruction-section 
+                                .orderBumpAccepted="${this.orderBumpAccepted}"
+                                @payment-uploaded="${this.handlePaymentUpload}">
+                            </payment-instruction-section>
+                        ` : ''}
+
+                        ${this.currentPage === 'upsell' ? html`
+                            <upsell-page-section @upsell-responded="${this.handleUpsell}"></upsell-page-section>
+                        ` : ''}
+
+                        ${this.currentPage === 'downsell' ? html`
+                            <downsell-page-section @downsell-responded="${this.handleDownsell}"></downsell-page-section>
+                        ` : ''}
+
+                        ${this.currentPage === 'thankyou' ? html`
+                            <thank-you-section 
+                                .formData="${this.formData}"
+                                .orderBumpAccepted="${this.orderBumpAccepted}"
+                                .upsellAccepted="${this.upsellAccepted}"
+                                .downsellAccepted="${this.downsellAccepted}"
+                                .paymentProofName="${this.paymentProofName}">
+                            </thank-you-section>
+                        ` : ''}
+                    </div>
+                `;
+            }
+        }
+        customElements.define('landing-page-app', LandingPageApp);
+
+        // Komponen Form Section
+        class FormSection extends LitElement {
+            static properties = {
+                name: { type: String },
+                email: { type: String },
+                phone: { type: String },
+            };
+
+            constructor() {
+                super();
+                this.name = '';
+                this.email = '';
+                this.phone = '';
+            }
+
+            _handleSubmit(e) {
+                e.preventDefault();
+                if (!this.name || !this.email || !this.phone) {
+                    alert('Harap isi semua field!'); // Ganti dengan UI feedback yang lebih baik
+                    return;
+                }
+                const formData = { name: this.name, email: this.email, phone: this.phone };
+                this.dispatchEvent(new CustomEvent('form-submitted', { detail: { formData } }));
+            }
+
+            render() {
+                return html`
+                    <div class="card">
+                        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Dapatkan Ebook Diet Eksklusif!</h1>
+                        <p class="text-center text-gray-600 mb-8">Mulai perjalanan diet sehat Anda hari ini dengan panduan lengkap dari kami. Isi formulir di bawah ini untuk mendapatkan Ebook Diet Gratis!</p>
+                        <form @submit="${this._handleSubmit}" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                                <input type="text" id="name" .value="${this.name}" @input="${e => this.name = e.target.value}" class="input-field" placeholder="John Doe" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Alamat Email</label>
+                                <input type="email" id="email" .value="${this.email}" @input="${e => this.email = e.target.value}" class="input-field" placeholder="anda@email.com" required>
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon (WhatsApp)</label>
+                                <input type="tel" id="phone" .value="${this.phone}" @input="${e => this.phone = e.target.value}" class="input-field" placeholder="081234567890" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">Dapatkan Ebook Sekarang!</button>
+                        </form>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('form-section', FormSection);
+
+        // Komponen Order Bump Modal
+        class OrderBumpModal extends LitElement {
+            static properties = {
+                visible: { type: Boolean },
+            };
+
+            constructor() {
+                super();
+                this.visible = false;
+            }
+
+            _respond(accepted) {
+                this.dispatchEvent(new CustomEvent('order-bump-responded', { detail: { accepted } }));
+            }
+            
+            // LitElement tidak punya lifecycle `updated` seperti Vue, tapi kita bisa pakai `render`
+            // atau `performUpdate` untuk efek samping. Untuk modal, lebih baik dikontrol dari parent.
+            render() {
+                if (!this.visible) return html``;
+
+                return html`
+                    <div class="modal-overlay">
+                        <div class="modal-content text-center">
+                            <h2 class="text-2xl font-bold mb-4 text-gray-800">Tunggu Sebentar! Penawaran Spesial Untuk Anda!</h2>
+                            <img src="https://placehold.co/300x200/e2e8f0/334155?text=Buku+Resep+Diet" alt="Buku Resep Diet" class="mx-auto mb-4 rounded-md shadow-sm" onerror="this.src='https://placehold.co/300x200/e0e0e0/757575?text=Gambar+Tidak+Tersedia'">
+                            <p class="text-gray-600 mb-2">Tambahkan "Buku Resep Diet Sehat & Lezat" ke pesanan Anda hanya dengan <span class="font-bold text-green-600">Rp 49.000</span> (Normal Rp 99.000)!</p>
+                            <p class="text-sm text-gray-500 mb-6">Berisi puluhan resep mudah diikuti untuk mendukung program diet Anda.</p>
+                            <div class="flex justify-center space-x-4">
+                                <button @click="${() => this._respond(true)}" class="btn btn-success">Ya, Tambahkan ke Pesanan!</button>
+                                <button @click="${() => this._respond(false)}" class="btn btn-secondary">Tidak, Terima Kasih</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('order-bump-modal', OrderBumpModal);
+
+        // Komponen Payment Instruction Section
+        class PaymentInstructionSection extends LitElement {
+            static properties = {
+                orderBumpAccepted: { type: Boolean },
+                fileName: { type: String }
+            };
+
+            constructor() {
+                super();
+                this.orderBumpAccepted = false;
+                this.fileName = '';
+            }
+
+            _handleFileUpload(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    this.fileName = file.name;
+                    // Di aplikasi nyata, Anda akan memproses file ini
+                    console.log('File selected:', file.name);
+                }
+            }
+
+            _submitProof() {
+                if (!this.fileName) {
+                    alert('Harap unggah bukti pembayaran Anda.'); // Ganti dengan UI feedback
+                    return;
+                }
+                this.dispatchEvent(new CustomEvent('payment-uploaded', { detail: { fileName: this.fileName } }));
+            }
+
+            render() {
+                const totalAmount = 100000 + (this.orderBumpAccepted ? 49000 : 0); // Contoh harga Ebook Rp 100.000
+                return html`
+                    <div class="card">
+                        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Instruksi Pembayaran</h2>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-700 p-4 mb-6 rounded-md" role="alert">
+                            <p class="font-bold">Detail Pesanan Anda:</p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Ebook Diet Eksklusif: Rp 100.000</li>
+                                ${this.orderBumpAccepted ? html`<li>Buku Resep Diet Sehat: Rp 49.000</li>` : ''}
+                            </ul>
+                            <p class="font-bold mt-2">Total Pembayaran: Rp ${totalAmount.toLocaleString('id-ID')}</p>
+                        </div>
+
+                        <p class="text-gray-700 mb-4">Silakan lakukan pembayaran ke rekening berikut:</p>
+                        <div class="bg-gray-50 p-4 rounded-md mb-6">
+                            <p><strong>Bank XYZ</strong></p>
+                            <p>No. Rekening: <span class="font-semibold">123-456-7890</span></p>
+                            <p>Atas Nama: <span class="font-semibold">PT Diet Sejahtera</span></p>
+                        </div>
+                        
+                        <p class="text-gray-700 mb-2">Setelah melakukan pembayaran, harap unggah bukti transfer Anda di bawah ini:</p>
+                        <div class="mb-4">
+                            <label for="paymentProof" class="block text-sm font-medium text-gray-700 mb-1">Unggah Bukti Pembayaran</label>
+                            <input type="file" id="paymentProof" @change="${this._handleFileUpload}" class="input-field" accept="image/*,.pdf" required>
+                            ${this.fileName ? html`<p class="text-sm text-green-600 mt-1">File terpilih: ${this.fileName}</p>` : ''}
+                        </div>
+                        <button @click="${this._submitProof}" class="btn btn-primary w-full">Konfirmasi Pembayaran</button>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('payment-instruction-section', PaymentInstructionSection);
+
+        // Komponen Upsell Page Section
+        class UpsellPageSection extends LitElement {
+            _respond(accepted) {
+                this.dispatchEvent(new CustomEvent('upsell-responded', { detail: { accepted } }));
+            }
+
+            render() {
+                return html`
+                    <div class="card text-center">
+                        <h2 class="text-3xl font-bold mb-4 text-yellow-500">Penawaran Spesial Terakhir Untuk Maksimalkan Hasil Diet Anda!</h2>
+                        <img src="https://placehold.co/400x250/fffbeb/f59e0b?text=Ecourse+Diet+Intensif" alt="Ecourse Diet Intensif" class="mx-auto mb-6 rounded-lg shadow-lg" onerror="this.src='https://placehold.co/400x250/e0e0e0/757575?text=Gambar+Tidak+Tersedia'">
+                        <p class="text-xl text-gray-700 mb-2">Dapatkan Akses Eksklusif ke <strong class="text-yellow-600">"Ecourse Diet Intensif Selama 30 Hari"</strong>!</p>
+                        <p class="text-gray-600 mb-6">Program video terstruktur, bimbingan ahli, grup komunitas, dan rencana makan lengkap untuk transformasi total. Harga normal Rp 999.000, khusus untuk Anda hari ini hanya <strong class="text-2xl text-green-600">Rp 499.000!</strong></p>
+                        <div class="flex justify-center space-x-4">
+                            <button @click="${() => this._respond(true)}" class="btn btn-success text-lg px-8 py-3">Ya, Saya Mau Ecourse Ini!</button>
+                            <button @click="${() => this._respond(false)}" class="btn btn-secondary">Tidak, Saya Lewatkan Penawaran Ini</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('upsell-page-section', UpsellPageSection);
+
+        // Komponen Downsell Page Section
+        class DownsellPageSection extends LitElement {
+             _respond(accepted) {
+                this.dispatchEvent(new CustomEvent('downsell-responded', { detail: { accepted } }));
+            }
+
+            render() {
+                return html`
+                    <div class="card text-center">
+                        <h2 class="text-2xl font-bold mb-4 text-gray-800">Baik, Kami Mengerti. Bagaimana Dengan Ini?</h2>
+                         <img src="https://placehold.co/350x200/e0f2fe/0ea5e9?text=DP+Ecourse+50%25" alt="DP Ecourse Diet" class="mx-auto mb-6 rounded-lg shadow-md" onerror="this.src='https://placehold.co/350x200/e0e0e0/757575?text=Gambar+Tidak+Tersedia'">
+                        <p class="text-gray-700 mb-4">Kami benar-benar ingin Anda berhasil. Dapatkan <strong class="text-cyan-600">"Ecourse Diet Intensif"</strong> dengan membayar <strong class="text-cyan-600">DP 50% HANYA Rp 249.500</strong> sekarang!</p>
+                        <p class="text-gray-600 mb-6">Sisa pembayaran dapat Anda lunasi dalam 30 hari ke depan. Kesempatan terbatas!</p>
+                        <div class="flex justify-center space-x-4">
+                            <button @click="${() => this._respond(true)}" class="btn btn-primary">Oke, Saya Ambil Tawaran DP Ini!</button>
+                            <button @click="${() => this._respond(false)}" class="btn btn-secondary">Tidak, Terima Kasih</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('downsell-page-section', DownsellPageSection);
+
+        // Komponen Thank You Section
+        class ThankYouSection extends LitElement {
+            static properties = {
+                formData: { type: Object },
+                orderBumpAccepted: { type: Boolean },
+                upsellAccepted: { type: Boolean },
+                downsellAccepted: { type: Boolean },
+                paymentProofName: { type: String },
+            };
+
+            render() {
+                return html`
+                    <div class="card text-center">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h2 class="text-3xl font-bold mb-4 text-gray-800">Terima Kasih, ${this.formData.name}!</h2>
+                        <p class="text-gray-700 mb-2">Pesanan Anda telah kami terima dan sedang diproses.</p>
+                        <p class="text-gray-600 mb-6">Bukti pembayaran Anda (<span class="font-semibold">${this.paymentProofName}</span>) akan segera kami verifikasi. Informasi lebih lanjut akan kami kirimkan ke email <span class="font-semibold">${this.formData.email}</span>.</p>
+                        
+                        <div class="bg-gray-50 p-4 rounded-md mb-6 text-left">
+                            <h3 class="text-lg font-semibold mb-2 text-gray-700">Ringkasan Pesanan:</h3>
+                            <ul class="list-disc list-inside ml-4 text-gray-600">
+                                <li>Ebook Diet Eksklusif</li>
+                                ${this.orderBumpAccepted ? html`<li>Buku Resep Diet Sehat</li>` : ''}
+                                ${this.upsellAccepted ? html`<li>Ecourse Diet Intensif (Lunas)</li>` : ''}
+                                ${!this.upsellAccepted && this.downsellAccepted ? html`<li>Ecourse Diet Intensif (DP 50%)</li>` : ''}
+                            </ul>
+                        </div>
+                        <p class="text-sm text-gray-500">Jika ada pertanyaan, silakan hubungi kami melalui WhatsApp di nomor yang Anda daftarkan.</p>
+                    </div>
+                `;
+            }
+        }
+        customElements.define('thank-you-section', ThankYouSection);
+
+    </script>
+</body>
+</html>

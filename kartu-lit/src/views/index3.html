@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page Diet Sehat</title>
+    <!-- Menambahkan konfigurasi CDN dan import build.js untuk gaya HAX-like -->
+    <script>
+      window.__appCDN = "https://cdn.hax.cloud/cdn/";
+    </script>
+    <script src="https://cdn.hax.cloud/cdn/build.js"></script>
+    <!-- Import LitElement -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/lit@2.0.0/lit-core.min.js"></script>
+    <style>
+        /* CSS Global dan Variabel HAX-like */
+        :root {
+            /* Variabel tema HAX-like yang akan tetap didefinisikan secara global */
+            --ddd-theme-default-link: #007bff;
+            --ddd-theme-default-link80: rgba(0, 123, 255, 0.8);
+            --ddd-theme-default-linkLight: #e6f2ff;
+            --ddd-theme-default-disabled: #cccccc;
+            --ddd-theme-default-error: #dc3545;
+            --ddd-theme-default-errorLight: #f8d7da;
+            --ddd-theme-default-success: #28a745;
+            --ddd-theme-default-successLight: #d4edda;
+            --ddd-theme-default-warning: #ffc107;
+            --ddd-theme-default-warningLight: #fff3cd;
+            --ddd-theme-default-info: #17a2b8;
+            --ddd-theme-default-infoLight: #d1ecf1;
+            --ddd-theme-default-primary: #007bff;
+            --ddd-theme-default-secondary: #6c757d;
+            --ddd-theme-default-light-grey: #f8f9fa;
+            --ddd-theme-default-dark-grey: #343a40;
+            --ddd-theme-default-white: #ffffff;
+            --ddd-theme-default-black: #000000;
+
+            /* Variabel ddd-spacing akan disediakan oleh build.js */
+
+            --font-family-inter: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-inter);
+            margin: 0;
+            padding: 0;
+            background-color: var(--ddd-theme-default-light-grey);
+            color: var(--ddd-theme-default-dark-grey);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: var(--ddd-spacing-10) auto; /* Menggunakan ddd-spacing */
+            padding: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            background-color: var(--ddd-theme-default-white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--ddd-theme-default-primary);
+            text-align: center;
+            margin-bottom: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+        }
+
+        p {
+            margin-bottom: var(--ddd-spacing-4); /* Menggunakan ddd-spacing */
+        }
+
+        button {
+            display: block;
+            width: fit-content;
+            margin: var(--ddd-spacing-5) auto; /* Menggunakan ddd-spacing */
+            padding: var(--ddd-spacing-3) var(--ddd-spacing-6); /* Menggunakan ddd-spacing */
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--ddd-theme-default-white);
+            background: linear-gradient(145deg, var(--ddd-theme-default-link), var(--ddd-theme-default-link80));
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: linear-gradient(145deg, var(--ddd-theme-default-link80), var(--ddd-theme-default-link));
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background: var(--ddd-theme-default-disabled);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="file"],
+        textarea {
+            width: calc(100% - var(--ddd-spacing-5)); /* Menggunakan ddd-spacing */
+            padding: var(--ddd-spacing-2); /* Menggunakan ddd-spacing */
+            margin-bottom: var(--ddd-spacing-4); /* Menggunakan ddd-spacing */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: var(--ddd-theme-default-link);
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: var(--ddd-spacing-4); /* Menggunakan ddd-spacing */
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--ddd-spacing-1); /* Menggunakan ddd-spacing */
+            font-weight: bold;
+            color: var(--ddd-theme-default-secondary);
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+            padding: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background-color: var(--ddd-theme-default-white);
+            margin: auto;
+            padding: var(--ddd-spacing-8); /* Menggunakan ddd-spacing */
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .close-button {
+            position: absolute;
+            top: var(--ddd-spacing-4); /* Menggunakan ddd-spacing */
+            right: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            color: var(--ddd-theme-default-dark-grey);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--ddd-theme-default-error);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .message-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--ddd-theme-default-white);
+            padding: var(--ddd-spacing-6); /* Menggunakan ddd-spacing */
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            text-align: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .message-box p {
+            margin-bottom: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            font-size: 1.1em;
+            color: var(--ddd-theme-default-dark-grey);
+        }
+
+        .message-box button {
+            margin-top: var(--ddd-spacing-2); /* Menggunakan ddd-spacing */
+            padding: var(--ddd-spacing-2) var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            font-size: 1em;
+            border-radius: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .page-content {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Styling spesifik untuk Order Bump */
+        .order-bump-offer {
+            border: 2px dashed var(--ddd-theme-default-link);
+            padding: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            margin-top: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            border-radius: 8px;
+            background-color: var(--ddd-theme-default-linkLight);
+        }
+
+        .order-bump-offer h3 {
+            color: var(--ddd-theme-default-link);
+            margin-top: var(--ddd-spacing-0); /* Menggunakan ddd-spacing */
+        }
+
+        .order-bump-offer button {
+            margin-top: var(--ddd-spacing-4); /* Menggunakan ddd-spacing */
+            width: auto;
+            padding: var(--ddd-spacing-2) var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            font-size: 1em;
+        }
+
+        /* Styling untuk upload bukti bayar */
+        .upload-section {
+            border: 1px solid #ddd;
+            padding: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            border-radius: 8px;
+            background-color: var(--ddd-theme-default-light-grey);
+            text-align: center;
+        }
+
+        .upload-section input[type="file"] {
+            margin-bottom: var(--ddd-spacing-4); /* Menggunakan ddd-spacing */
+            border: none;
+            padding: var(--ddd-spacing-0); /* Menggunakan ddd-spacing */
+        }
+
+        .upload-section button {
+            margin-top: var(--ddd-spacing-2); /* Menggunakan ddd-spacing */
+        }
+
+        .product-card {
+            background-color: var(--ddd-theme-default-white);
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: var(--ddd-spacing-6); /* Menggunakan ddd-spacing */
+            margin-bottom: var(--ddd-spacing-6); /* Menggunakan ddd-spacing */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .product-card h3 {
+            color: var(--ddd-theme-default-success);
+            margin-bottom: var(--ddd-spacing-2); /* Menggunakan ddd-spacing */
+        }
+
+        .product-card p {
+            color: var(--ddd-theme-default-dark-grey);
+            font-size: 1.1em;
+            margin-bottom: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+        }
+
+        .product-card .price {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--ddd-theme-default-primary);
+            margin-bottom: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+        }
+
+        .product-card button {
+            width: auto;
+            margin: var(--ddd-spacing-2) auto; /* Menggunakan ddd-spacing */
+        }
+
+        .option-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            margin-top: var(--ddd-spacing-8); /* Menggunakan ddd-spacing */
+        }
+
+        .option-buttons button {
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .option-buttons .no-thanks-button {
+            background: var(--ddd-theme-default-secondary);
+        }
+
+        .option-buttons .no-thanks-button:hover {
+            background: var(--ddd-theme-default-dark-grey);
+        }
+
+        .info-box {
+            background-color: var(--ddd-theme-default-infoLight);
+            border: 1px solid var(--ddd-theme-default-info);
+            padding: var(--ddd-spacing-4); /* Menggunakan ddd-spacing */
+            border-radius: 8px;
+            margin-bottom: var(--ddd-spacing-5); /* Menggunakan ddd-spacing */
+            color: var(--ddd-theme-default-info);
+            font-weight: bold;
+        }
+
+        .success-message {
+            background-color: var(--ddd-theme-default-successLight);
+            border: 1px solid var(--ddd-theme-default-success);
+            padding: var(--ddd-spacing-8); /* Menggunakan ddd-spacing */
+            border-radius: 8px;
+            text-align: center;
+            color: var(--ddd-theme-default-success);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <main id="app-container"></main>
+    </div>
+
+    <!-- Message Box untuk Alert Kustom -->
+    <div id="messageBox" class="message-box">
+        <p id="messageBoxText"></p>
+        <button id="messageBoxClose">OK</button>
+    </div>
+
+    <script type="module">
+        // Mengimpor LitElement. Asumsi DDD akan tersedia secara global setelah build.js dimuat.
+        import { LitElement, html, css } from 'https://cdn.jsdelivr.net/npm/lit@2.0.0/lit-core.min.js';
+
+        // Fungsi untuk menampilkan message box kustom
+        function showMessageBox(message) {
+            const messageBox = document.getElementById('messageBox');
+            const messageBoxText = document.getElementById('messageBoxText');
+            const messageBoxClose = document.getElementById('messageBoxClose');
+
+            messageBoxText.textContent = message;
+            messageBox.style.display = 'block';
+
+            messageBoxClose.onclick = () => {
+                messageBox.style.display = 'none';
+            };
+        }
+
+        // --- Komponen LitElement ---
+
+        // Komponen Landing Page
+        // Mengubah untuk extend DDD, mengasumsikan DDD tersedia secara global dari build.js
+        class LandingPage extends DDD {
+            static styles = [ /* Mengubah ke array untuk super.styles */
+                super.styles, /* Menyertakan gaya dasar dari DDD */
+                css`
+                    .landing-content {
+                        text-align: center;
+                        padding: var(--ddd-spacing-5); /* Contoh penggunaan ddd-spacing */
+                    }
+                    .landing-content h1 {
+                        font-size: 2.5em;
+                        margin-bottom: var(--ddd-spacing-5);
+                    }
+                    .landing-content p {
+                        font-size: 1.1em;
+                        margin-bottom: var(--ddd-spacing-8);
+                    }
+                    img {
+                        margin-top: var(--ddd-spacing-8);
+                    }
+                `
+            ];
+
+            render() {
+                return html`
+                    <div class="landing-content page-content">
+                        <h1>Raih Tubuh Idealmu dengan Ebook Diet Sehat!</h1>
+                        <p>Dapatkan panduan lengkap untuk memulai perjalanan dietmu hari ini. Resep lezat, tips praktis, dan motivasi untuk mencapai tujuan kesehatanmu.</p>
+                        <button @click=${this._goToForm}>Dapatkan Ebook Sekarang!</button>
+                        <img src="https://placehold.co/600x400/007bff/ffffff?text=Ebook+Diet+Sehat" alt="[Image of Ebook Diet Sehat]" style="max-width: 100%; height: auto; border-radius: 8px;">
+                    </div>
+                `;
+            }
+
+            _goToForm() {
+                this.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'form' } }));
+            }
+        }
+        customElements.define('landing-page', LandingPage);
+
+        // Komponen Formulir Pendaftaran
+        class RegistrationForm extends DDD { /* Mengubah untuk extend DDD */
+            static styles = [ /* Mengubah ke array untuk super.styles */
+                super.styles, /* Menyertakan gaya dasar dari DDD */
+                css`
+                    .form-container {
+                        padding: var(--ddd-spacing-5);
+                    }
+                    .form-container h2 {
+                        margin-bottom: var(--ddd-spacing-6);
+                    }
+                `
+            ];
+
+            render() {
+                return html`
+                    <div class="form-container page-content">
+                        <h2>Isi Formulir Pendaftaran</h2>
+                        <div class="form-group">
+                            <label for="name">Nama Lengkap:</label>
+                            <input type="text" id="name" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" placeholder="Masukkan email Anda" required>
+                        </div>
+                        <button @click=${this._submitForm}>Lanjutkan Pembayaran</button>
+                    </div>
+                `;
+            }
+
+            _submitForm() {
+                const nameInput = this.shadowRoot.getElementById('name');
+                const emailInput = this.shadowRoot.getElementById('email');
+                const name = nameInput.value;
+                const email = emailInput.value;
+
+                if (name && email) {
+                    console.log('Form Submitted:', { name, email });
+                    // Bersihkan input setelah submit
+                    nameInput.value = '';
+                    emailInput.value = '';
+                    this.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'order-bump' } }));
+                } else {
+                    showMessageBox('Mohon lengkapi semua kolom formulir.');
+                }
+            }
+        }
+        customElements.define('registration-form', RegistrationForm);
+
+        // Komponen Order Bump Pop-up
+        class OrderBumpModal extends DDD { /* Mengubah untuk extend DDD */
+            static styles = [ /* Mengubah ke array untuk super.styles */
+                super.styles, /* Menyertakan gaya dasar dari DDD */
+                css`
+                    .modal-content {
+                        text-align: center;
+                    }
+                    .order-bump-offer {
+                        margin-bottom: var(--ddd-spacing-5);
+                    }
+                    .order-bump-offer h3 {
+                        color: var(--ddd-theme-default-link);
+                        font-size: 1.8em;
+                    }
+                    .order-bump-offer p {
+                        font-size: 1.1em;
+                        margin-bottom: var(--ddd-spacing-4);
+                    }
+                    .order-bump-offer .price {
+                        font-size: 1.5em;
+                        font-weight: bold;
+                        color: var(--ddd-theme-default-primary);
+                    }
+                    .button-group {
+                        display: flex;
+                        flex-wrap: wrap; /* Allow buttons to wrap */
+                        justify-content: center;
+                        gap: var(--ddd-spacing-4);
+                        margin-top: var(--ddd-spacing-5);
+                    }
+                    .button-group button {
+                        width: auto;
+                        padding: var(--ddd-spacing-2) var(--ddd-spacing-5);
+                        font-size: 1em;
+                        margin: var(--ddd-spacing-0); /* Override global button margin */
+                    }
+                    .button-group .no-thanks-button {
+                        background: var(--ddd-theme-default-secondary);
+                    }
+                    .button-group .no-thanks-button:hover {
+                        background: var(--ddd-theme-default-dark-grey);
+                    }
+                `
+            ];
+
+            render() {
+                return html`
+                    <div class="modal" id="orderBumpModal">
+                        <div class="modal-content">
+                            <span class="close-button" @click=${this._closeModal}>&times;</span>
+                            <div class="order-bump-offer">
+                                <h3>Tawaran Spesial Hanya Untuk Anda!</h3>
+                                <p>Tambahkan "Buku Resep Diet Lezat" sekarang dan buat dietmu lebih menyenangkan!</p>
+                                <img src="https://placehold.co/300x200/28a745/ffffff?text=Buku+Resep+Diet" alt="[Image of Buku Resep Diet]" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: var(--ddd-spacing-4);">
+                                <p class="price">Hanya Rp 49.000!</p>
+                            </div>
+                            <div class="button-group">
+                                <button @click=${() => this._acceptOffer(true)}>Ya, Saya Mau!</button>
+                                <button class="no-thanks-button" @click=${() => this._acceptOffer(false)}>Tidak, Terima Kasih</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            _acceptOffer(accepted) {
+                this.dispatchEvent(new CustomEvent('order-bump-response', { detail: { accepted } }));
+                this._closeModal();
+            }
+
+            _closeModal() {
+                const modal = this.shadowRoot.getElementById('orderBumpModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
+
+            show() {
+                const modal = this.shadowRoot.getElementById('orderBumpModal');
+                if (modal) {
+                    modal.style.display = 'flex'; // Use flex to center content
+                }
+            }
+        }
+        customElements.define('order-bump-modal', OrderBumpModal);
+
+        // Komponen Halaman Instruksi Pembayaran
+        class PaymentInstructions extends DDD { /* Mengubah untuk extend DDD */
+            static styles = [ /* Mengubah ke array untuk super.styles */
+                super.styles, /* Menyertakan gaya dasar dari DDD */
+                css`
+                    .payment-container {
+                        padding: var(--ddd-spacing-5);
+                    }
+                    .payment-container h2 {
+                        margin-bottom: var(--ddd-spacing-6);
+                    }
+                    .bank-info {
+                        background-color: var(--ddd-theme-default-infoLight);
+                        border: 1px solid var(--ddd-theme-default-info);
+                        padding: var(--ddd-spacing-5);
+                        border-radius: 8px;
+                        margin-bottom: var(--ddd-spacing-6);
+                        color: var(--ddd-theme-default-info);
+                    }
+                    .bank-info p {
+                        margin: var(--ddd-spacing-1) var(--ddd-spacing-0);
+                        font-size: 1.1em;
+                    }
+                    .bank-info strong {
+                        color: var(--ddd-theme-default-primary);
+                    }
+                    .upload-section {
+                        margin-top: var(--ddd-spacing-8);
+                    }
+                `
+            ];
+
+            render() {
+                return html`
+                    <div class="payment-container page-content">
+                        <h2>Instruksi Pembayaran</h2>
+                        <p>Silakan lakukan pembayaran untuk pesanan Anda:</p>
+                        <div class="bank-info">
+                            <p>Bank: <strong>BCA</strong></p>
+                            <p>Nomor Rekening: <strong>1234567890</strong></p>
+                            <p>Atas Nama: <strong>PT. Diet Sehat Bersama</strong></p>
+                            <p>Jumlah Pembayaran: <strong>Rp 99.000</strong> (Ebook Diet)</p>
+                            <p><em>(Jika Anda mengambil Order Bump, total pembayaran akan disesuaikan.)</em></p>
+                        </div>
+
+                        <div class="upload-section">
+                            <h3>Upload Bukti Pembayaran</h3>
+                            <p>Setelah melakukan pembayaran, mohon upload bukti transfer Anda di sini.</p>
+                            <input type="file" id="proofOfPayment" accept="image/*" required>
+                            <button @click=${this._uploadProof}>Konfirmasi Pembayaran</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            _uploadProof() {
+                const fileInput = this.shadowRoot.getElementById('proofOfPayment');
+                if (fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name;
+                    console.log('Bukti pembayaran diupload:', fileName);
+                    showMessageBox(`Bukti pembayaran ${fileName} berhasil diupload!`);
+                    this.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'upsell' } }));
+                } else {
+                    showMessageBox('Mohon pilih file bukti pembayaran.');
+                }
+            }
+        }
+        customElements.define('payment-instructions', PaymentInstructions);
+
+        // Komponen Halaman Upsell
+        class UpsellPage extends DDD { /* Mengubah untuk extend DDD */
+            static styles = [ /* Mengubah ke array untuk super.styles */
+                super.styles, /* Menyertakan gaya dasar dari DDD */
+                css`
+                    .upsell-container {
+                        text-align: center;
+                        padding: var(--ddd-spacing-5);
+                    }
+                    .upsell-container h2 {
+                        font-size: 2.2em;
+                        color: var(--ddd-theme-default-success);
+                        margin-bottom: var(--ddd-spacing-6);
+                    }
+                    .product-card {
+                        margin-bottom: var(--ddd-spacing-8);
+                    }
+                `
+            ];
+
+            render() {
+                return html`
+                    <div class="upsell-container page-content">
+                        <h2>Tawaran Eksklusif Hanya Untuk Anda!</h2>
+                        <p>Jangan lewatkan kesempatan untuk meningkatkan hasil diet Anda!</p>
+
+                        <div class="product-card">
+                            <h3>E-course Diet Komprehensif</h3>
+                            <p>Pelajari rahasia diet dari para ahli dengan video tutorial, sesi Q&A, dan komunitas eksklusif.</p>
+                            <img src="https://placehold.co/400x250/28a745/ffffff?text=E-course+Diet" alt="[Image of E-course Diet]" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: var(--ddd-spacing-4);">
+                            <p class="price">Harga Spesial: Rp 299.000</p>
+                            <button @click=${() => this._acceptOffer(true)}>Ya, Saya Mau E-course Ini!</button>
+                        </div>
+
+                        <div class="option-buttons">
+                            <button class="no-thanks-button" @click=${() => this._acceptOffer(false)}>Tidak, Terima Kasih</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            _acceptOffer(accepted) {
+                if (accepted) {
+                    this.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'payment-upsell' } }));
+                } else {
+                    this.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'downsell' } }));
+                }
+            }
+        }
+        customElements.define('upsell-page', UpsellPage);
+
+        // Komponen Halaman Downsell
+        class DownsellPage extends DDD { /* Mengubah untuk extend DDD */
+            static styles = [ /* Mengubah ke array untuk super.styles */
+                super.styles, /* Menyertakan gaya dasar dari DDD */
+                css`
+                    .downsell-container {
+                        text-align: center;
+                        padding: var(--ddd-spacing-5);
+                    }
+                    .downsell-container h2 {
+                        font-size: 2.2em;
+                        color: var(--ddd-theme-default-warning);
+                        margin-bottom: var(--ddd-spacing-6);
+                    }
+                    .product-card {
+                        margin-bottom: var(--ddd-spacing-8);
+                    }
+                    .product-card .price-option {
+                        font-size: 1.5em;
+                        font-weight: bold;
+                        color: var(--ddd-theme-default-primary);
+                        margin-bottom: var(--ddd-spacing-4);
+                    }
+                    .product-card .small-text {
+                        font-size: 0.9em;
+                        color: var(--ddd-theme-default-secondary);
+                    }
+                `
+            ];
+
+            render() {
+                return html`
+                    <div class="downsell-container page-content">
+                        <h2>Tunggu Dulu! Jangan Lewatkan Kesempatan Ini!</h2>
+                        <p>Kami memahami jika Anda ragu. Bagaimana jika Anda bisa memulai dengan lebih ringan?</p>
+
+                        <div class="product-card">
+                            <h3>E-course Diet Komprehensif (DP 50%)</h3>
+                            <p>Dapatkan akses ke E-course Diet Komprehensif hanya dengan membayar 50% di awal. Sisa pembayaran bisa dilunasi nanti!</p>
+                            <img src="https://placehold.co/400x250/ffc107/ffffff?text=E-course+Diet+DP" alt="[Image of E-course Diet DP 50%]" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: var(--ddd-spacing-4);">
+                            <p class="price-option">DP Hanya: Rp 149.500</p>
+                            <p class="small-text">(Sisa Rp 149.500 dibayar kemudian)</p>
+                            <button @click=${() => this._acceptOffer(true)}>Ya, Saya Mau dengan DP 50%!</button>
+                        </div>
+
+                        <div class="option-buttons">
+                            <button class="no-thanks-button" @click=${() => this._acceptOffer(false)}>Tidak, Terima Kasih</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            _acceptOffer(accepted) {
+                if (accepted) {
+                    this.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'payment-downsell' } }));
+                } else {
+                    this.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'thank-you' } }));
+                }
+            }
+        }
+        customElements.define('downsell-page', DownsellPage);
+
+        // Komponen Halaman Pembayaran untuk Upsell/Downsell
+        class PaymentUpsellDownsell extends DDD { /* Mengubah untuk extend DDD */
+            static properties = {
+                product: { type: String } // 'upsell' or 'downsell'
+            };
+
+            static styles = [ /* Mengubah ke array untuk super.styles */
+                super.styles, /* Menyertakan gaya dasar dari DDD */
+                css`
+                    .payment-container {
+                        padding: var(--ddd-spacing-5);
+                    }
+                    .payment-container h2 {
+                        margin-bottom: var(--ddd-spacing-6);
+                    }
+                    .bank-info {
+                        background-color: var(--ddd-theme-default-infoLight);
+                        border: 1px solid var(--ddd-theme-default-info);
+                        padding: var(--ddd-spacing-5);
+                        border-radius: 8px;
+                        margin-bottom: var(--ddd-spacing-6);
+                        color: var(--ddd-theme-default-info);
+                    }
+                    .bank-info p {
+                        margin: var(--ddd-spacing-1) var(--ddd-spacing-0);
+                        font-size: 1.1em;
+                    }
+                    .bank-info strong {
+                        color: var(--ddd-theme-default-primary);
+                    }
+                    .upload-section {
+                        margin-top: var(--ddd-spacing-8);
+                    }
+                `
+            ];
+
+            render() {
+                let productName = '';
+                let amount = '';
+                if (this.product === 'upsell') {
+                    productName = 'E-course Diet Komprehensif';
+                    amount = 'Rp 299.000';
+                } else if (this.product === 'downsell') {
+                    productName = 'E-course Diet Komprehensif (DP 50%)';
+                    amount = 'Rp 149.500';
+                }
+
+                return html`
+                    <div class="payment-container page-content">
+                        <h2>Instruksi Pembayaran untuk ${productName}</h2>
+                        <p>Silakan lakukan pembayaran untuk ${productName}:</p>
+                        <div class="bank-info">
+                            <p>Bank: <strong>BCA</strong></p>
+                            <p>Nomor Rekening: <strong>1234567890</strong></p>
+                            <p>Atas Nama: <strong>PT. Diet Sehat Bersama</strong></p>
+                            <p>Jumlah Pembayaran: <strong>${amount}</strong></p>
+                        </div>
+
+                        <div class="upload-section">
+                            <h3>Upload Bukti Pembayaran</h3>
+                            <p>Setelah melakukan pembayaran, mohon upload bukti transfer Anda di sini.</p>
+                            <input type="file" id="proofOfPayment" accept="image/*" required>
+                            <button @click=${this._uploadProof}>Konfirmasi Pembayaran</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            _uploadProof() {
+                const fileInput = this.shadowRoot.getElementById('proofOfPayment');
+                if (fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name;
+                    console.log('Bukti pembayaran diupload:', fileName);
+                    showMessageBox(`Bukti pembayaran ${fileName} berhasil diupload!`);
+                    this.dispatchEvent(new CustomEvent('navigate', { detail: { page: 'thank-you' } }));
+                } else {
+                    showMessageBox('Mohon pilih file bukti pembayaran.');
+                }
+            }
+        }
+        customElements.define('payment-upsell-downsell', PaymentUpsellDownsell);
+
+        // Komponen Halaman Terima Kasih
+        class ThankYouPage extends DDD { /* Mengubah untuk extend DDD */
+            static styles = [ /* Mengubah ke array untuk super.styles */
+                super.styles, /* Menyertakan gaya dasar dari DDD */
+                css`
+                    .thank-you-container {
+                        text-align: center;
+                        padding: var(--ddd-spacing-5);
+                    }
+                    .thank-you-container h2 {
+                        font-size: 2.8em;
+                        color: var(--ddd-theme-default-success);
+                        margin-bottom: var(--ddd-spacing-5);
+                    }
+                    .thank-you-container p {
+                        font-size: 1.2em;
+                        color: var(--ddd-theme-default-dark-grey);
+                    }
+                    img {
+                        margin-top: var(--ddd-spacing-8);
+                    }
+                `
+            ];
+
+            render() {
+                return html`
+                    <div class="thank-you-container page-content">
+                        <h2>Terima Kasih!</h2>
+                        <p>Pembayaran Anda telah kami terima. Anda akan segera menerima akses ke produk Anda.</p>
+                        <p>Selamat memulai perjalanan diet sehat Anda!</p>
+                        <img src="https://placehold.co/400x300/28a745/ffffff?text=Terima+Kasih" alt="[Image of Terima Kasih]" style="max-width: 100%; height: auto; border-radius: 8px;">
+                    </div>
+                `;
+            }
+        }
+        customElements.define('thank-you-page', ThankYouPage);
+
+        // --- Main App Logic ---
+        class AppContainer extends LitElement {
+            static properties = {
+                currentPage: { type: String },
+                showOrderBump: { type: Boolean }
+            };
+
+            constructor() {
+                super();
+                this.currentPage = 'landing'; // Halaman awal
+                this.showOrderBump = false;
+            }
+
+            render() {
+                return html`
+                    ${this.currentPage === 'landing' ? html`<landing-page @navigate=${this._handleNavigation}></landing-page>` : ''}
+                    ${this.currentPage === 'form' ? html`<registration-form @navigate=${this._handleNavigation}></registration-form>` : ''}
+                    ${this.currentPage === 'order-bump' ? html`<order-bump-modal @order-bump-response=${this._handleOrderBumpResponse}></order-bump-modal>` : ''}
+                    ${this.currentPage === 'payment' ? html`<payment-instructions @navigate=${this._handleNavigation}></payment-instructions>` : ''}
+                    ${this.currentPage === 'upsell' ? html`<upsell-page @navigate=${this._handleNavigation}></upsell-page>` : ''}
+                    ${this.currentPage === 'downsell' ? html`<downsell-page @navigate=${this._handleNavigation}></downsell-page>` : ''}
+                    ${this.currentPage === 'payment-upsell' ? html`<payment-upsell-downsell product="upsell" @navigate=${this._handleNavigation}></payment-upsell-downsell>` : ''}
+                    ${this.currentPage === 'payment-downsell' ? html`<payment-upsell-downsell product="downsell" @navigate=${this._handleNavigation}></payment-upsell-downsell>` : ''}
+                    ${this.currentPage === 'thank-you' ? html`<thank-you-page></thank-you-page>` : ''}
+                `;
+            }
+
+            firstUpdated() {
+                // Tampilkan order bump modal jika halaman saat ini adalah 'order-bump'
+                if (this.currentPage === 'order-bump') {
+                    const orderBumpModal = this.shadowRoot.querySelector('order-bump-modal');
+                    if (orderBumpModal) {
+                        orderBumpModal.show();
+                    }
+                }
+            }
+
+            updated(changedProperties) {
+                if (changedProperties.has('currentPage') && this.currentPage === 'order-bump') {
+                    const orderBumpModal = this.shadowRoot.querySelector('order-bump-modal');
+                    if (orderBumpModal) {
+                        orderBumpModal.show();
+                    }
+                }
+            }
+
+            _handleNavigation(event) {
+                this.currentPage = event.detail.page;
+                console.log('Navigating to:', this.currentPage);
+                // Scroll to top on page change
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            _handleOrderBumpResponse(event) {
+                const accepted = event.detail.accepted;
+                console.log('Order Bump Accepted:', accepted);
+                // Lanjutkan ke halaman instruksi pembayaran setelah order bump
+                this.currentPage = 'payment';
+            }
+        }
+        customElements.define('app-container', AppContainer);
+
+        // Inisialisasi aplikasi utama
+        document.addEventListener('DOMContentLoaded', () => {
+            const appContainer = document.getElementById('app-container');
+            appContainer.appendChild(document.createElement('app-container'));
+        });
+    </script>
+</body>
+</html>

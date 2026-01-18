@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Latihan | Lit Component</title>
+  </head>
+  <body>
+    <my-element></my-element>
+    
+    <project-card
+  date="Feb 2, 2021"
+  title="Web Designing with Lit"
+  description="Prototyping in Lit"
+  progress="90"
+  .avatars=${JSON.stringify([
+    { src: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', alt: 'User 1' },
+    { src: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', alt: 'User 2' }
+  ])}
+  countdownText="2 days left"
+  cardColorClass="green">
+</project-card>
+
+<project-card
+  date="March 08, 2021"
+  title="Mobile App with Lit"
+  description="Shopping App in Lit"
+  progress="30"
+  .avatars=${JSON.stringify([
+    { src: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', alt: 'User 3' },
+    { src: 'https://images.pexels.com/photos/874158/pexels-photo-874158.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', alt: 'User 4' }
+  ])}
+  countdownText="3 weeks left"
+  cardColorClass="orange">
+</project-card>
+
+<!-- <script type="module" src="../js/components/project-card.js"></script> -->
+<script>
+
+    // Misalkan Anda ingin menambahkan event listener ke tombol "2 days left" pada kartu pertama
+document.addEventListener('DOMContentLoaded', () => {
+  const firstCardCountdownButton = document.querySelector('.card.green .btn-countdown');
+
+  if (firstCardCountdownButton) {
+    firstCardCountdownButton.addEventListener('click', (event) => {
+      event.preventDefault(); // Mencegah aksi default link
+      alert('Tombol countdown diklik!');
+      // Tambahkan logika lain di sini
+    });
+  }
+
+  // Anda juga bisa memanipulasi progress bar, misalnya:
+  const firstCardProgressBar = document.querySelector('.card.green .progress-bar::after');
+  // Catatan: Memanipulasi pseudo-element seperti ::after secara langsung dengan JS itu rumit.
+  // Cara yang lebih baik adalah dengan mengubah variabel CSS atau kelas.
+  // Atau, jika progress bar adalah elemen nyata, Anda bisa mengubah width-nya.
+  // Untuk contoh ini, kita akan mengasumsikan progress bar adalah elemen nyata (bukan pseudo)
+  // atau kita mengontrolnya via variabel CSS.
+
+  // Jika Anda ingin membuat kartu baru secara dinamis:
+  const section = document.querySelector('section');
+  const newCardHTML = `
+    <div class="card blue"> 
+      // ... (struktur HTML kartu baru) ...
+    </div>`;
+  // section.insertAdjacentHTML('beforeend', newCardHTML); // Menambahkan kartu baru
+});
+</script>
+  </body>
+</html>

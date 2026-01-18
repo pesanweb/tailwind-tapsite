@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Cards</title>
+    <style>
+        /* Global styles for the document body and root, outside of Lit Element's shadow DOM.
+           These styles apply to the main document, not just the custom element. */
+
+        /* Define CSS variables to mimic the @haxtheweb/d-d-d package's theming.
+           The provided SCSS already sets a dark theme, so these variables reinforce it. */
+        :root {
+            --ddd-font-family: "Nunito", sans-serif;
+            --ddd-background-color: #232228;
+            --ddd-text-color: #ddd;
+            --ddd-primary-color-green: #01c3a8;
+            --ddd-primary-color-blue: #1890ff;
+            --ddd-primary-color-orange: #ffb741;
+            --ddd-primary-color-red: #a63d2a;
+            --ddd-card-background-dark: #151419;
+            --ddd-background-color:var(--ddd-primary-color-blue);
+            --ddd-border-color: #292929;
+            --ddd-box-shadow: 0.063em 0.75em 1.563em rgb(0 0 0 / 78%);
+            --ddd-border-radius: 2.25rem;
+        }
+
+        /* Body styles using the defined CSS variables */
+        body {
+            min-height: 100vh;
+            min-height: 100svh;
+            background: var(--ddd-background-color);
+            font-family: var(--ddd-font-family);
+            position: relative;
+            overflow-x: hidden;
+            display: grid;
+            place-items: center;
+            margin: 0; /* Remove default body margin */
+            padding: 0; /* Remove default body padding */
+        }
+    </style>
+</head>
+<body>
+    <task-card-section></task-card-section>
+
+    
+</body>
+</html>
