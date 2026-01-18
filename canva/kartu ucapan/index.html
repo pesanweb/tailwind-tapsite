@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Learning Celebration Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+        
+        .card {
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            height: 70vh;
+            max-height: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+        
+        .card-front, .card-inside {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        
+        .card-inside {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+        }
+        
+        .flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+        }
+        
+        .code-element {
+            position: absolute;
+            font-family: monospace;
+            color: rgba(59, 130, 246, 0.7);
+            animation: float-code 8s linear infinite;
+            opacity: 0.7;
+        }
+        
+        @keyframes float-code {
+            0% { transform: translateY(100vh); }
+            100% { transform: translateY(-100px); }
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .html-icon {
+            margin-bottom: 20px;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .message {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s;
+        }
+        
+        .show-message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .name-highlight {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            display: inline-block;
+        }
+        
+        .badge {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+        
+        .badge-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: rotate 10s linear infinite;
+        }
+        
+        .badge-content {
+            width: 85%;
+            height: 85%;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            animation: progress 2s ease-out forwards;
+        }
+        
+        @keyframes progress {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center">
+    <div class="card" id="card">
+        <div class="card-front">
+            <div class="html-icon">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <polygon points="50,0 95,15 90,85 50,100 10,85 5,15" fill="#E44D26" />
+                    <polygon points="50,10 85,22 80,80 50,92 20,80 15,22" fill="#F16529" />
+                    <polygon points="50,20 50,80 75,75 79,35" fill="#FFFFFF" />
+                    <polygon points="50,20 50,80 25,75 21,35" fill="#EBEBEB" />
+                    <path d="M40,45 L60,45 L59,55 L50,58 L41,55 L40,45 Z" fill="#FFFFFF" />
+                    <path d="M63,35 L37,35 L38,45 L62,45 L63,35 Z" fill="#FFFFFF" />
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold mb-4">Congratulations!</h1>
+            <h2 class="text-2xl mb-6">You've mastered <span class="name-highlight">HTML</span>!</h2>
+            <button class="button" id="openCard">Open Card</button>
+        </div>
+        <div class="card-inside">
+            <div class="badge">
+                <div class="badge-inner">
+                    <div class="badge-content">
+                        <svg class="progress-ring" width="80" height="80">
+                            <circle class="progress-ring-circle" stroke="#3b82f6" stroke-width="6" fill="transparent" r="35" cx="40" cy="40"/>
+                        </svg>
+                        <div class="absolute text-2xl font-bold text-blue-600">100%</div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold mb-4">Achievement Unlocked!</h2>
+            <p class="text-center text-lg mb-4 message" id="message1">You've successfully completed your HTML studies!</p>
+            <p class="text-center text-lg mb-6 message" id="message2">This is just the beginning of your web development journey.</p>
+            <div class="text-xl font-bold message" id="message3">🚀 Keep coding and creating! 🚀</div>
+            <button class="button mt-8" id="closeCard">Close Card</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.getElementById('card');
+            const openButton = document.getElementById('openCard');
+            const closeButton = document.getElementById('closeCard');
+            const message1 = document.getElementById('message1');
+            const message2 = document.getElementById('message2');
+            const message3 = document.getElementById('message3');
+            
+            // Create floating code elements
+            const codeSnippets = [
+                '&lt;html&gt;', '&lt;/html&gt;', '&lt;head&gt;', '&lt;/head&gt;', 
+                '&lt;body&gt;', '&lt;/body&gt;', '&lt;div&gt;', '&lt;/div&gt;',
+                '&lt;p&gt;', '&lt;/p&gt;', '&lt;h1&gt;', '&lt;/h1&gt;',
+                '&lt;a&gt;', '&lt;/a&gt;', '&lt;img&gt;', '&lt;ul&gt;', '&lt;/ul&gt;'
+            ];
+            
+            for (let i = 0; i < 15; i++) {
+                createFloatingCode(codeSnippets[i % codeSnippets.length], i);
+            }
+            
+            // Open card
+            openButton.addEventListener('click', function() {
+                card.classList.add('flipped');
+                setTimeout(() => {
+                    message1.classList.add('show-message');
+                    setTimeout(() => {
+                        message2.classList.add('show-message');
+                        setTimeout(() => {
+                            message3.classList.add('show-message');
+                            createConfetti();
+                        }, 500);
+                    }, 500);
+                }, 500);
+            });
+            
+            // Close card
+            closeButton.addEventListener('click', function() {
+                message1.classList.remove('show-message');
+                message2.classList.remove('show-message');
+                message3.classList.remove('show-message');
+                setTimeout(() => {
+                    card.classList.remove('flipped');
+                }, 500);
+            });
+            
+            function createFloatingCode(text, index) {
+                const codeElement = document.createElement('div');
+                codeElement.className = 'code-element';
+                codeElement.innerHTML = text;
+                
+                const size = 12 + Math.random() * 10;
+                codeElement.style.fontSize = `${size}px`;
+                
+                const xPos = Math.random() * 100;
+                codeElement.style.left = `${xPos}%`;
+                
+                const duration = 8 + Math.random() * 10;
+                codeElement.style.animationDuration = `${duration}s`;
+                
+                const delay = Math.random() * 5;
+                codeElement.style.animationDelay = `${delay}s`;
+                
+                document.body.appendChild(codeElement);
+            }
+            
+            function createConfetti() {
+                const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+                const shapes = ['circle', 'square', 'triangle'];
+                
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        
+                        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                        const size = 5 + Math.random() * 10;
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        
+                        confetti.style.width = `${size}px`;
+                        confetti.style.height = `${size}px`;
+                        confetti.style.backgroundColor = color;
+                        
+                        if (shape === 'circle') {
+                            confetti.style.borderRadius = '50%';
+                        } else if (shape === 'triangle') {
+                            confetti.style.width = '0';
+                            confetti.style.height = '0';
+                            confetti.style.backgroundColor = 'transparent';
+                            confetti.style.borderLeft = `${size/2}px solid transparent`;
+                            confetti.style.borderRight = `${size/2}px solid transparent`;
+                            confetti.style.borderBottom = `${size}px solid ${color}`;
+                        }
+                        
+                        confetti.style.left = `${Math.random() * 100}%`;
+                        confetti.style.top = `-20px`;
+                        confetti.style.opacity = '1';
+                        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                        
+                        document.body.appendChild(confetti);
+                        
+                        const animationDuration = 3 + Math.random() * 2;
+                        const xMovement = -50 + Math.random() * 100;
+                        
+                        confetti.animate([
+                            { transform: `translateY(0) translateX(0) rotate(0deg)`, opacity: 1 },
+                            { transform: `translateY(${window.innerHeight}px) translateX(${xMovement}px) rotate(${360 + Math.random() * 360}deg)`, opacity: 0 }
+                        ], {
+                            duration: animationDuration * 1000,
+                            easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                        }).onfinish = () => {
+                            confetti.remove();
+                        };
+                    }, i * 100);
+                }
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94486cd1a19740f1',t:'MTc0ODA0MzkwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.jss';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
