@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="Description" content="Demonstration for my-element-dom">
+
+  <style>
+  
+  </style>
+  <title>my-element-dom</title>
+</head>
+
+<body>
+  
+  <my-element-dom title="Cool stuf" cool>Ini akan di-render lit-element</my-element-dom>
+  <my-element-dom title="Cool stuf"></my-element-dom>
+  <my-element-dom title="Cool stuf">
+    <p slot="two">Elemen ini akan diletakkan pada slot
+      bernama two</p>
+
+  </my-element-dom>
+
+  <hr>
+  <my-element-dom title="Cool stuf" cool>
+
+    <p slot="one">Elemen ini akan diletakkan pada slot
+      bernama one</p>
+      <p slot="nope">Elemen ini tidak akan di-render karena
+      tidak ada slot bernama nope</p>
+      <p>Elemen ini akan dimunculkan pada slot default
+      (elemen slot tak bernama)</p>
+
+  </my-element-dom>
+
+
+<my-dom>
+  <h1>Dicoding SLot</h1>
+  <!-- bukan di paragraphnya tapi di nama element -->
+  <p>Belajar warna biru</p>
+</my-dom>
+<my-dom class="blue">
+
+</my-dom>
+
+<styling-child>
+
+  <div>
+    <a href="https://www.dicoding.com/">Dicoding Indo</a>
+  </div>
+  <p slot="one">Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse ex, incidunt, consequuntur qui suscipit porro iusto tempora voluptatum vero necessitatibus facere maxime perspiciatis earum. Doloribus culpa numquam esse soluta ratione.
+
+  </p>
+</styling-child>
+
+  <script type="module" src="./src/my-element-dom.js"></script>
+  <script type="module" src="./src/my-dom.js"></script>
+  <script type="module" src="./src/styling-child.js"></script>
+
+
+
+</body>
+</html>
